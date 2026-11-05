@@ -1,0 +1,20 @@
+services:
+  mongodb: #cargamos la imagen de mongo
+    image: mongo:7
+    container_name: bdautos-mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - bdautos-mongodb-data:/data/db # volumen para persistir los datos de mongodb
+
+
+    healthcheck: #healthcheck para verificar que el contenedor de mongodb esté funcionando correctamente
+      test: ["CMD-SHELL", "mongosh --quiet --eval 'db.adminCommand({ ping: 1 }).ok' | grep 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+      start_period: 5s
+
+volumes:
+  bdautos-mongodb-data:
